@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Tracking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 24px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            margin-top: 8px;
+            opacity: 0.6;
+            font-size: 14px;
+            font-family: 'Space Mono', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+            padding: 0 40px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            padding: 16px 28px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .tab-btn.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-bottom-color: #6366f1;
+            color: #6366f1;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-icon {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 80px;
+            opacity: 0.1;
+            transform: rotate(15deg);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            font-family: 'Space Mono', monospace;
+            line-height: 1;
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .chart-container {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .chart-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        /* Tables */
+        .table-container {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+        }
+
+        th {
+            padding: 16px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+            transform: scale(1.01);
+        }
+
+        td {
+            padding: 16px;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-placed {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .status-not-placed {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .status-confirmed {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .status-expected {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            flex-direction: column;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(99, 102, 241, 0.2);
+            border-top: 4px solid #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(15, 23, 42, 0.8);
+            border-top: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 24px 40px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Placement Tracking System</h1>
+        <div class="subtitle">Real-time placement analytics & insights</div>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('dashboard')">Dashboard</button>
+            <button class="tab-btn" onclick="showTab('students')">Students</button>
+            <button class="tab-btn" onclick="showTab('companies')">Companies</button>
+            <button class="tab-btn" onclick="showTab('expected')">Expected Companies</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="mainContent">
+        <div class="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 20px; font-size: 18px; opacity: 0.8;">Loading placement data...</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Placement Tracking System | Built with HTML, CSS, JavaScript & Chart.js</p>
+    </footer>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
+        let currentData = {
+            stats: null,
+            deptStats: [],
+            yearStats: [],
+            students: [],
+            companies: [],
+            expectedCompanies: []
+        };
+
+        // Fetch all data on load
+        async function fetchAllData() {
+            try {
+                const [statsRes, deptRes, yearRes, studentsRes, companiesRes, expectedRes] = await Promise.all([
+                    fetch(`${API_BASE}/statistics/overall`),
+                    fetch(`${API_BASE}/statistics/department`),
+                    fetch(`${API_BASE}/statistics/year`),
+                    fetch(`${API_BASE}/students`),
+                    fetch(`${API_BASE}/companies`),
+                    fetch(`${API_BASE}/expected-companies`)
+                ]);
+
+                const statsData = await statsRes.json();
+                const deptData = await deptRes.json();
+                const yearData = await yearRes.json();
+                const studentsData = await studentsRes.json();
+                const companiesData = await companiesRes.json();
+                const expectedData = await expectedRes.json();
+
+                currentData = {
+                    stats: statsData.data,
+                    deptStats: deptData.data,
+                    yearStats: yearData.data,
+                    students: studentsData.data,
+                    companies: companiesData.data,
+                    expectedCompanies: expectedData.data
+                };
+
+                renderDashboard();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('mainContent').innerHTML = `
+                    <div class="loading">
+                        <p style="color: #ef4444;">Error loading data. Please check if the backend server is running.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Render dashboard
+        function renderDashboard() {
+            const stats = currentData.stats;
+            document.getElementById('mainContent').innerHTML = `
+                <!-- Dashboard Tab -->
+                <div id="tab-dashboard" class="tab-content active">
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        ${createStatCard('Total Students', stats.totalStudents, '👥', '#6366f1')}
+                        ${createStatCard('Students Placed', stats.studentsPlaced, '✅', '#10b981')}
+                        ${createStatCard('Placement Rate', `${stats.placementPercentage}%`, '📊', '#f59e0b')}
+                        ${createStatCard('Avg Package', `₹${stats.averagePackage || 0} LPA`, '💰', '#8b5cf6')}
+                        ${createStatCard('Highest Package', `₹${stats.highestPackage || 0} LPA`, '🏆', '#ec4899')}
+                        ${createStatCard('Companies Visited', stats.companiesVisited, '🏢', '#3b82f6')}
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="charts-grid">
+                        <div class="chart-container">
+                            <h3 class="chart-title">Department-wise Placement</h3>
+                            <canvas id="deptChart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3 class="chart-title">Placement Status</h3>
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Year Chart -->
+                    <div class="chart-container">
+                        <h3 class="chart-title">Year-wise Performance</h3>
+                        <canvas id="yearChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Students Tab -->
+                <div id="tab-students" class="tab-content">
+                    <div class="table-container">
+                        <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px;">Student Records</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Batch</th>
+                                    <th>Status</th>
+                                    <th>Company</th>
+                                    <th>Package</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${currentData.students.map(s => `
+                                    <tr>
+                                        <td style="font-family: 'Space Mono', monospace; font-size: 13px;">${s.studentId}</td>
+                                        <td style="font-weight: 600;">${s.name}</td>
+                                        <td style="color: rgba(255,255,255,0.8);">${s.department}</td>
+                                        <td style="color: rgba(255,255,255,0.8);">${s.batchYear}</td>
+                                        <td>
+                                            <span class="status-badge ${s.placementStatus === 'PLACED' ? 'status-placed' : 'status-not-placed'}">
+                                                ${s.placementStatus}
+                                            </span>
+                                        </td>
+                                        <td style="color: rgba(255,255,255,0.8);">${s.companyPlaced || '-'}</td>
+                                        <td style="font-family: 'Space Mono', monospace; color: #6366f1; font-weight: 600;">
+                                            ${s.packageLpa ? `₹${s.packageLpa} LPA` : '-'}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Companies Tab -->
+                <div id="tab-companies" class="tab-content">
+                    <div class="table-container">
+                        <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px;">Company Visits</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Company Name</th>
+                                    <th>Visit Year</th>
+                                    <th>Students Placed</th>
+                                    <th>Package Offered</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${currentData.companies.map(c => `
+                                    <tr>
+                                        <td style="font-weight: 600; font-size: 15px;">${c.companyName}</td>
+                                        <td style="color: rgba(255,255,255,0.8);">${c.visitYear}</td>
+                                        <td style="font-family: 'Space Mono', monospace; color: #10b981; font-weight: 600;">
+                                            ${c.studentsPlaced}
+                                        </td>
+                                        <td style="font-family: 'Space Mono', monospace; color: #6366f1; font-weight: 600;">
+                                            ${c.packageOffered ? `₹${c.packageOffered} LPA` : '-'}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Expected Companies Tab -->
+                <div id="tab-expected" class="tab-content">
+                    <div class="table-container">
+                        <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 24px;">Expected Company Visits</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Company Name</th>
+                                    <th>Expected Year</th>
+                                    <th>Status</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${currentData.expectedCompanies.map(c => `
+                                    <tr>
+                                        <td style="font-weight: 600; font-size: 15px;">${c.companyName}</td>
+                                        <td style="color: rgba(255,255,255,0.8);">${c.expectedYear}</td>
+                                        <td>
+                                            <span class="status-badge status-${c.status.toLowerCase()}">
+                                                ${c.status}
+                                            </span>
+                                        </td>
+                                        <td style="color: rgba(255,255,255,0.7); font-size: 14px;">${c.notes || '-'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            renderCharts();
+        }
+
+        // Create stat card
+        function createStatCard(label, value, icon, color) {
+            return `
+                <div class="stat-card" style="border-color: ${color}40;">
+                    <div class="stat-icon">${icon}</div>
+                    <div style="position: relative; z-index: 1;">
+                        <div class="stat-label">${label}</div>
+                        <div class="stat-value" style="color: ${color};">${value}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render charts
+        function renderCharts() {
+            // Department Chart
+            new Chart(document.getElementById('deptChart'), {
+                type: 'bar',
+                data: {
+                    labels: currentData.deptStats.map(d => d.department),
+                    datasets: [
+                        {
+                            label: 'Students Placed',
+                            data: currentData.deptStats.map(d => d.studentsPlaced),
+                            backgroundColor: '#6366f1'
+                        },
+                        {
+                            label: 'Total Students',
+                            data: currentData.deptStats.map(d => d.totalStudents),
+                            backgroundColor: '#8b5cf6'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { labels: { color: '#fff' } }
+                    },
+                    scales: {
+                        x: { ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                        y: { ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                    }
+                }
+            });
+
+            // Status Chart
+            new Chart(document.getElementById('statusChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Placed', 'Not Placed'],
+                    datasets: [{
+                        data: [
+                            currentData.stats.studentsPlaced,
+                            currentData.stats.totalStudents - currentData.stats.studentsPlaced
+                        ],
+                        backgroundColor: ['#10b981', '#ef4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { labels: { color: '#fff' } }
+                    }
+                }
+            });
+
+            // Year Chart
+            new Chart(document.getElementById('yearChart'), {
+                type: 'bar',
+                data: {
+                    labels: currentData.yearStats.map(y => y.year),
+                    datasets: [{
+                        label: 'Placement %',
+                        data: currentData.yearStats.map(y => y.placementPercentage),
+                        backgroundColor: '#6366f1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { labels: { color: '#fff' } }
+                    },
+                    scales: {
+                        x: { ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                        y: { 
+                            ticks: { color: 'rgba(255,255,255,0.6)' }, 
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // Tab switching
+        function showTab(tabName) {
+            // Update buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        // Initialize
+        fetchAllData();
+    </script>
+</body>
+</html>
