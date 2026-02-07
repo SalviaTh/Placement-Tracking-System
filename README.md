@@ -120,9 +120,7 @@ mvn spring-boot:run
 
 ### Step 3: Frontend Setup
 simple open with live server in the Dashboard.html
-
-
-# Then navigate to http://localhost:8080/dashboard.html
+Then navigate to http://localhost:8080/dashboard.html
 ```
 
 ---
@@ -237,3 +235,4 @@ Contributions are welcome! To contribute:
 ---
 
 Made with ❤️ for colleges and placement officers
+
