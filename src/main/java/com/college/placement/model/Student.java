@@ -3,8 +3,11 @@ package com.college.placement.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "students")
@@ -70,4 +73,24 @@ public class Student {
             return displayName;
         }
     }
+    @Column(precision = 3, scale = 2)
+    private BigDecimal cgpa = BigDecimal.ZERO;
+
+    @Column
+    private Integer backlogs = 0;
+
+    @Column(columnDefinition = "JSON")
+    private String skills;
+
+    @Column(name = "is_eligible_for_placement")
+    private Boolean isEligibleForPlacement = true;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Application> applications = new ArrayList<>();
+
+    @OneToOne(mappedBy="student")
+    @JsonIgnore
+    private User user;
+    
 }
