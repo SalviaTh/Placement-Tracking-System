@@ -149,53 +149,17 @@ npx http-server
 
 ---
 
-##  **Testing the System**
-
-### 1. Test Backend APIs
-
-**Login as Admin:**
-```bash
-curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "admin",
-    "password": "admin123"
-  }'
-```
-
-Response:
-```json
-{
-  "success": true,
-  "data": {
-    "accessToken": "eyJhbGciOiJIUzUxMiJ9...",
-    "role": "ADMIN"
-  }
-}
-```
-
-**Get All Students:**
-```bash
-curl http://localhost:8080/api/students \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"
-```
-
-**Check Placement Statistics:**
-```bash
-curl http://localhost:8080/api/statistics/overall
-```
-
 ### 2. Test Frontend
 
 1. Open `dashboard.html` in browser
 2. You should see:
+   - Login page
    - Statistics cards (total students, placement rate, etc.)
    - Charts showing department-wise and year-wise data
    - Tables with student records
 
 ---
 
----
 
 ##  **Authentication Flow**
 
@@ -232,8 +196,8 @@ curl http://localhost:8080/api/statistics/overall
 ---
 
 Login credentials:
-- Admin: `admin` / `admin123`
-- Student: `rajesh.kumar` / `password123`
+- Admin: `admin` / `123456`
+- Student: `rajesh.kumar` / `123456`
 
 ---
 
