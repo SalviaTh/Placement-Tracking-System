@@ -40,9 +40,11 @@ public class PlacementDrive {
     
     // Eligibility Criteria
     @Column(name = "min_cgpa", precision = 3, scale = 2)
+    @Builder.Default
     private BigDecimal minCgpa = BigDecimal.ZERO;
     
     @Column(name = "max_backlogs")
+    @Builder.Default
     private Integer maxBacklogs = 0;
     
     @Column(name = "eligible_departments", columnDefinition = "JSON")
@@ -63,9 +65,11 @@ public class PlacementDrive {
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private DriveStatus status = DriveStatus.UPCOMING;
     
     @Column(name = "total_positions")
+    @Builder.Default
     private Integer totalPositions = 1;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -74,6 +78,7 @@ public class PlacementDrive {
     
     @OneToMany(mappedBy = "drive", cascade = CascadeType.ALL)
     @JsonIgnore
+    @Builder.Default
     private List<Application> applications = new ArrayList<>();
     
     @Column(name = "created_at", updatable = false)
