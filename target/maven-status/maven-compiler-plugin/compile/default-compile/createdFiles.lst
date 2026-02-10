@@ -20,6 +20,7 @@ com\college\placement\model\OfferLetter$OfferLetterBuilder.class
 com\college\placement\config\SecurityConfig.class
 com\college\placement\dto\PlacementStatisticsDTO$PlacementStatisticsDTOBuilder.class
 com\college\placement\model\PlacementDrive$PlacementDriveBuilder.class
+com\college\placement\config\DataInitializer.class
 com\college\placement\service\StatisticsService.class
 com\college\placement\dto\LoginRequest.class
 com\college\placement\service\ExpectedCompanyService.class

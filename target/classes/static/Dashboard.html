@@ -371,7 +371,11 @@
                 console.error('Error fetching data:', error);
                 document.getElementById('mainContent').innerHTML = `
                     <div class="loading">
-                        <p style="color: #ef4444;">Error loading data. Please check if the backend server is running.</p>
+                        <p style="color: #ef4444; text-align: center; max-width: 600px;">
+                            Error loading data. <br><br>
+                            1. Ensure the backend server is running.<br>
+                            2. Access this dashboard via <a href="http://localhost:8080/Dashboard.html" style="color: #6366f1;">http://localhost:8080/Dashboard.html</a> instead of opening the file directly.
+                        </p>
                     </div>
                 `;
             }
@@ -617,12 +621,20 @@
         // Tab switching
         function showTab(tabName) {
             // Update buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
 
             // Update content
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.getElementById(`tab-${tabName}`).classList.add('active');
+            const content = document.getElementById(`tab-${tabName}`);
+            if (content) {
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                content.classList.add('active');
+            } else {
+                console.warn(`Tab content for ${tabName} not found yet. Data might still be loading.`);
+            }
         }
 
         // Initialize
