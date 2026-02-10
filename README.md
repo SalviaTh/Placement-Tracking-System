@@ -4,7 +4,7 @@ A complete web application for colleges to manage student placements, track appl
 
 ---
 
-## 📌 **What Does This System Do?**
+## **What Does This System Do?**
 
 This system helps colleges manage their entire placement process:
 
@@ -14,34 +14,34 @@ This system helps colleges manage their entire placement process:
 
 ---
 
-## 🎯 **Key Features**
+## **Key Features**
 
 ### For Students:
-- ✅ Register and login with secure authentication
-- ✅ View placement drives they're eligible for
-- ✅ Apply to companies with resume upload
-- ✅ Track application status in real-time
-- ✅ Receive notifications for new drives and updates
-- ✅ Accept or decline job offers
+-  Register and login with secure authentication
+-  View placement drives they're eligible for
+-  Apply to companies with resume upload
+-  Track application status in real-time
+-  Receive notifications for new drives and updates
+-  Accept or decline job offers
 
 ### For Admins (Placement Officers):
-- ✅ Create and manage placement drives
-- ✅ Set eligibility criteria (CGPA, backlogs, department, batch)
-- ✅ Review applications and update status
-- ✅ Upload offer letters
-- ✅ View analytics and statistics
-- ✅ Export reports in Excel or PDF format
+-  Create and manage placement drives
+-  Set eligibility criteria (CGPA, backlogs, department, batch)
+-  Review applications and update status
+-  Upload offer letters
+-  View analytics and statistics
+-  Export reports in Excel or PDF format
 
 ### Automated Features:
-- ✅ Eligibility checking based on student profile
-- ✅ Email notifications for all events
-- ✅ Daily deadline reminders
-- ✅ Resume parsing to extract information
-- ✅ Automatic placement status updates
+-  Eligibility checking based on student profile
+-  Email notifications for all events
+-  Daily deadline reminders
+-  Resume parsing to extract information
+-  Automatic placement status updates
 
 ---
 
-## 🛠️ **Technology Stack**
+##  **Technology Stack**
 
 | Component | Technology |
 |-----------|-----------|
@@ -129,7 +129,7 @@ mvn clean install
 mvn spring-boot:run
 ```
 
-✅ **Success!** You should see: `Started PlacementTrackingApplication in X seconds`
+ **Success!** You should see: `Started PlacementTrackingApplication in X seconds`
 
 Backend is now running at: **http://localhost:8080**
 
@@ -145,11 +145,11 @@ Backend is now running at: **http://localhost:8080**
 npx http-server
 ```
 
-✅ **Success!** Frontend opens at: **http://localhost:3000**
+ **Success!** Frontend opens at: **http://localhost:3000**
 
 ---
 
-## 🧪 **Testing the System**
+##  **Testing the System**
 
 ### 1. Test Backend APIs
 
@@ -197,7 +197,7 @@ curl http://localhost:8080/api/statistics/overall
 
 ---
 
-## 🔐 **Authentication Flow**
+##  **Authentication Flow**
 
 1. **Register** → System creates user account
 2. **Login** → System returns JWT token
@@ -206,7 +206,7 @@ curl http://localhost:8080/api/statistics/overall
 
 ---
 
-## 🎯 **User Workflows**
+##  **User Workflows**
 
 ### Student Journey:
 
@@ -237,16 +237,16 @@ Login credentials:
 
 ---
 
-## 🎉 **You're All Set!**
+##  **You're All Set!**
 
 Your placement tracking system is now ready to use. Start by:
 
-1. ✅ Login as admin
-2. ✅ Create a new placement drive
-3. ✅ Login as student  
-4. ✅ Apply to eligible drives
-5. ✅ Update application status as admin
-6. ✅ Generate reports
+1.  Login as admin
+2.  Create a new placement drive
+3.  Login as student  
+4.  Apply to eligible drives
+5.  Update application status as admin
+6.  Generate reports
 
 **Version:** 2.0 (Enhanced)  
 **Last Updated:** January 2025  
